@@ -1,2 +1,2 @@
 # curl -sS localhost:8080/item/1
-GET http://localhost:8080/item/foobar
+GET http://localhost:8080/item/1
