@@ -20,12 +20,19 @@ func main() {
 	router.HandleFunc("GET /item/{id}", findByID)
 
 	// Subrouting
-	v1 := http.NewServeMux()
-	v1.Handle("/v1/", http.StripPrefix("/v1", router))
+	// v1 := http.NewServeMux()
+	router.Handle("/v1/", http.StripPrefix("/v1", router))
+
+	stack := middleware.CreateStack(
+		middleware.Logging,
+		// middleware.AllowCors,
+		// middleware.IsAuthed,
+		// middleware.CheckPerissions,
+	)
 
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.Logging(router),
+		Handler: stack(router),
 	}
 	log.Println("Starting server on port :8080")
 	server.ListenAndServe()
