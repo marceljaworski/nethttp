@@ -14,7 +14,12 @@ func findByID(w http.ResponseWriter, r *http.Request) {
 }
 
 // func handlerAdmin(w http.ResponseWriter, r *http.Request) {
-// 	w.Write([]byte("you are an authorized Admin"))
+// userID, ok := r.Context().Value(middleware.AuthUserID).(string)
+// if !ok {
+// 	log.Println("invalid user ID")
+// 	w.WriteHeader(http.StatusBadRequest)
+// }
+// w.Write([]byte("you are an authorized Admin " + userID))
 // }
 
 func main() {
@@ -26,7 +31,7 @@ func main() {
 	// Subrouting
 	router.Handle("/v1/", http.StripPrefix("/v1", router))
 
-	// Router for Admin Authentication
+	// Router restricted to Admins only
 	// adminRouter := http.NewServeMux()
 	// adminRouter.HandleFunc("POST /item/", handlerAdmin)
 	// adminRouter.HandleFunc("PUT /item/{id}", handlerAdmin)
@@ -38,7 +43,7 @@ func main() {
 		middleware.Logging,
 		// middleware.EnsureAdmin
 		// middleware.AllowCors,
-		// middleware.IsAuthed,
+		// middleware.IsAuthentiticated,
 		// middleware.CheckPerissions,
 	)
 
