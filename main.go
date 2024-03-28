@@ -13,6 +13,10 @@ func findByID(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("received " + method + " request for item: " + id))
 }
 
+// func handlerAdmin(w http.ResponseWriter, r *http.Request) {
+// 	w.Write([]byte("you are an authorized Admin"))
+// }
+
 func main() {
 	router := http.NewServeMux()
 
@@ -20,11 +24,19 @@ func main() {
 	router.HandleFunc("GET /item/{id}", findByID)
 
 	// Subrouting
-	// v1 := http.NewServeMux()
 	router.Handle("/v1/", http.StripPrefix("/v1", router))
+
+	// Router for Admin Authentication
+	// adminRouter := http.NewServeMux()
+	// adminRouter.HandleFunc("POST /item/", handlerAdmin)
+	// adminRouter.HandleFunc("PUT /item/{id}", handlerAdmin)
+	// adminRouter.HandleFunc("DELETE /item/{id}", handlerAdmin)
+	// Middleware for Admin Authentication
+	// router.Handle("/", middleware.EnsureAdmin(adminRouter))
 
 	stack := middleware.CreateStack(
 		middleware.Logging,
+		// middleware.EnsureAdmin
 		// middleware.AllowCors,
 		// middleware.IsAuthed,
 		// middleware.CheckPerissions,
