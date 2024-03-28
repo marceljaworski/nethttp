@@ -15,8 +15,14 @@ func findByID(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	router := http.NewServeMux()
-	// Path parameter id
+
+	// specific method GET and Path parameter id
 	router.HandleFunc("GET /item/{id}", findByID)
+
+	// Subrouting
+	v1 := http.NewServeMux()
+	v1.Handle("/v1/", http.StripPrefix("/v1", router))
+
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: middleware.Logging(router),
